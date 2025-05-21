@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Birthday Bouquet</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        background: #fceff9;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      #bouquet-container {
+        position: relative;
+        width: 100vw;
+        height: 80vh;
+        max-width: 1000px;
+        max-height: 800px;
+        z-index: 1;
+      }
+
+      .flower {
+        position: absolute;
+        width: 20vw;
+        max-width: 200px;
+        height: 30vw;
+        max-height: 300px;
+        transform-origin: bottom center;
+        transition: transform 3s ease-in-out;
+      }
+
+      .petal {
+        position: absolute;
+        width: 8vw;
+        max-width: 80px;
+        height: 12vw;
+        max-height: 120px;
+        border-radius: 50%;
+        opacity: 0.9;
+      }
+
+      .rose .petal {
+        top: 45px;
+        left: 65px;
+      }
+
+      .rose .petal:nth-child(1) {
+        transform: rotate(0deg) translateY(-45px);
+      }
+      .rose .petal:nth-child(2) {
+        transform: rotate(72deg) translateY(-45px);
+      }
+      .rose .petal:nth-child(3) {
+        transform: rotate(144deg) translateY(-45px);
+      }
+      .rose .petal:nth-child(4) {
+        transform: rotate(216deg) translateY(-45px);
+      }
+      .rose .petal:nth-child(5) {
+        transform: rotate(288deg) translateY(-45px);
+      }
+
+      .orchid .petal1 {
+        top: 35px;
+        left: 90px;
+        transform: rotate(0deg);
+      }
+      .orchid .petal2 {
+        top: 25px;
+        left: 50px;
+        transform: rotate(-30deg);
+      }
+      .orchid .petal3 {
+        top: 25px;
+        right: 50px;
+        transform: rotate(30deg);
+      }
+      .orchid .petal4 {
+        top: 70px;
+        left: 25px;
+        transform: rotate(-60deg);
+      }
+      .orchid .petal5 {
+        top: 70px;
+        right: 25px;
+        transform: rotate(60deg);
+      }
+
+      .center {
+        position: absolute;
+        top: 75px;
+        left: 75px;
+        width: 25px;
+        height: 25px;
+        background: yellow;
+        border-radius: 50%;
+      }
+
+      .stem {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 1vw;
+        max-width: 10px;
+        height: 25vw;
+        max-height: 150px;
+        background: green;
+        transform: translateX(-50%);
+        transition: height 2s ease-in-out;
+      }
+
+      .bouquet-converge {
+        transform: translate(calc(var(--tx)), calc(var(--ty) - 10vw))
+          rotate(var(--angle));
+      }
+
+      .message {
+        position: absolute;
+        top: 25%;
+        width: 100%;
+        text-align: center;
+        font-size: 4rem;
+        font-weight: bold;
+        color: #d11a7b;
+        text-shadow: 1px 1px white;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        z-index: 2;
+      }
+
+      .message.fade-in {
+        animation: fadeIn 2s forwards, bounce 2s infinite 2s;
+      }
+
+      .message svg {
+        width: 100%;
+        height: 25vw;
+        max-height: 180px;
+      }
+
+      @media (max-width: 400px) {
+        .flower {
+          width: 25vw;
+          height: 35vw;
+        }
+        .petal {
+          width: 10vw;
+          height: 15vw;
+        }
+        .stem {
+          height: 20vw;
+        }
+        .message {
+          font-size: 12vw;
+          margin-bottom: 15px;
+        }
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-40px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes floaty {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      #panda-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: grid;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-rows: repeat(auto-fill, 100px);
+        justify-items: center;
+        align-items: center;
+      }
+
+      .panda {
+        width: 40px;
+        height: 40px;
+        opacity: 0.2;
+        animation: floaty 6s ease-in-out infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message" class="message hidden">
+      <svg viewBox="0 0 950 220" style="width: 100%; height: 220px">
+        <defs>
+          <filter id="shadow">
+            <feDropShadow
+              dx="2"
+              dy="2"
+              stdDeviation="2"
+              flood-color="#000000"
+              flood-opacity="0.5"
+            />
+          </filter>
+        </defs>
+
+        <!-- Adjusted path: start and end y moved down to 180, control point at 50 -->
+        <path id="curve" fill="transparent" d="M50,180 Q400,50 950,180" />
+
+        <text
+          font-size="60"
+          fill="#d11a7b"
+          style="font-family: 'Rubik Wet Paint', cursive"
+          filter="url(#shadow)"
+        >
+          <textPath href="#curve" startOffset="50%" text-anchor="middle">
+            HAPPY BIRTHDAY PUMPY!!!
+          </textPath>
+        </text>
+      </svg>
+    </div>
+
+    <div id="bouquet-container"></div>
+    <div
+      style="
+        font-family: 'Rubik Wet Paint', cursive;
+        font-size: 50px;
+        margin-top: 0px;
+        color: #d11a7b;
+        visibility: hidden;
+      "
+    >
+      <p>Aaj ki shaan bas tumhare naam</p>
+      <p></p>
+      <p>dajkfdkasf;kl</p>
+      <p>asd adkfja</p>
+      <p>;lfdka</p>
+    </div>
+    <!-- Panda background container -->
+    <div id="panda-background"></div>
+
+    <script>
+      const flowerCount = 30;
+      const colors = [
+        "red",
+        "pink",
+        "hotpink",
+        "purple",
+        "violet",
+        "magenta",
+        "orchid",
+        "salmon",
+        "deeppink",
+      ];
+
+      const container = document.getElementById("bouquet-container");
+
+      function updateBouquetPoint() {
+        return {
+          x: container.clientWidth / 2.5,
+          y: container.clientHeight * 0.7,
+        };
+      }
+
+      let bouquetPoint = updateBouquetPoint();
+
+      window.addEventListener("resize", () => {
+        bouquetPoint = updateBouquetPoint();
+      });
+
+      for (let i = 0; i < flowerCount; i++) {
+        const flower = document.createElement("div");
+        const isRose = Math.random() > 0.5;
+        flower.className = `flower ${isRose ? "rose" : "orchid"}`;
+
+        // Random start anywhere in the container (full screen)
+        const startX =
+          Math.random() *
+          container.clientWidth *
+          1.5 *
+          (Math.random() > 0.5 ? 1 : 0.3);
+        const startY =
+          Math.random() *
+          container.clientHeight *
+          1.5 *
+          (Math.random() * 0.73 > Math.random() * 0.35 ? 1.3 : 0.3);
+
+        flower.style.left = `${startX}px`;
+        flower.style.top = `${startY}px`;
+
+        // Calculate vector to center point
+        const dx = bouquetPoint.x - startX;
+        const dy = bouquetPoint.y - startY;
+
+        // Calculate angle so flower points toward center
+        const rawAngle = (Math.atan2(dy, dx) * 45) / Math.PI;
+        const angle = rawAngle; // Adjust so flowers face upward
+
+        flower.style.setProperty("--angle", `${angle}deg`);
+        flower.style.setProperty("--tx", `${dx}px`);
+        flower.style.setProperty("--ty", `${dy}px`);
+
+        // Add petals
+        if (isRose) {
+          for (let j = 0; j < 5; j++) {
+            const petal = document.createElement("div");
+            petal.className = "petal";
+            petal.style.background =
+              colors[Math.floor(Math.random() * colors.length)];
+            flower.appendChild(petal);
+          }
+        } else {
+          for (let j = 1; j <= 5; j++) {
+            const petal = document.createElement("div");
+            petal.className = `petal petal${j}`;
+            petal.style.background =
+              colors[Math.floor(Math.random() * colors.length)];
+            flower.appendChild(petal);
+          }
+        }
+
+        const center = document.createElement("div");
+        center.className = "center";
+        flower.appendChild(center);
+
+        const stem = document.createElement("div");
+        stem.className = "stem";
+        flower.appendChild(stem);
+
+        container.appendChild(flower);
+
+        setTimeout(() => {
+          flower.classList.add("bouquet-converge");
+        }, 100);
+      }
+
+      // After 3.2 seconds (convergence duration + small buffer), show message
+      setTimeout(() => {
+        const message = document.getElementById("message");
+        message.classList.remove("hidden");
+        message.classList.add("fade-in");
+      }, 3000);
+
+      const pandaContainer = document.getElementById("panda-background");
+
+      // Fill enough to cover the grid: use container size
+      const rows = Math.ceil(window.innerHeight / 30);
+      const cols = Math.ceil(window.innerWidth / 30);
+      const total = rows * cols;
+
+      const partyItems = [
+        "https://em-content.zobj.net/thumbs/240/apple/354/panda_1f43c.png",
+        "https://em-content.zobj.net/thumbs/240/apple/354/party-popper_1f389.png",
+        "https://em-content.zobj.net/thumbs/240/apple/354/balloon_1f388.png",
+        "https://em-content.zobj.net/thumbs/240/apple/354/birthday-cake_1f382.png",
+        "https://em-content.zobj.net/thumbs/240/apple/354/wrapped-gift_1f381.png",
+      ];
+
+      let lastIndex = -1;
+
+      for (let i = 0; i < total; i++) {
+        let randomIndex;
+        do {
+          randomIndex = Math.floor(Math.random() * partyItems.length);
+        } while (randomIndex === lastIndex); // avoid consecutive repeat
+
+        lastIndex = randomIndex;
+
+        const party = document.createElement("img");
+        party.src = partyItems[randomIndex];
+        party.className = "panda"; // or "party-item" if renamed
+        pandaContainer.appendChild(party);
+      }
+    </script>
+  </body>
+</html>
