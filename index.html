@@ -25,12 +25,13 @@
       }
 
       #bouquet-container {
-        position: relative;
-        width: 100vw;
-        height: 80vh;
+        position: absolute;
+        /* width: 100vw; */
+        height: 100vh;
         max-width: 1000px;
         max-height: 800px;
         z-index: 1;
+        margin: auto;
       }
 
       .flower {
@@ -152,7 +153,7 @@
         max-height: 180px;
       }
 
-      @media (max-width: 450px) {
+      @media (max-width: 400px) {
         .flower {
           width: 25vw;
           height: 35vw;
@@ -170,11 +171,16 @@
         }
       }
       @media (min-width: 450px) {
+        .message {
+          position: absolute;
+          top: 15%;
+          right: 3%;
+        }
         #bouquet-container {
           position: absolute; /* Required for 'top' to take effect */
-          top: 15%;
+          top: -30%;
           left: 0;
-          right: 0;
+          right: 25%;
           margin: 0 auto;
         }
       }
@@ -215,14 +221,14 @@
       }
 
       #panda-background {
-        position: absolute;
+        /* position: absolute; */
         top: 0;
         left: 0;
         display: grid;
         width: 100%;
         height: 100%;
-        pointer-events: none;
-        z-index: 0;
+        /* pointer-events: none; */
+        z-index: -1;
         grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
         grid-template-rows: repeat(auto-fill, 100px);
         justify-items: center;
@@ -235,59 +241,116 @@
         opacity: 0.2;
         animation: floaty 6s ease-in-out infinite;
       }
+
+      #entry {
+        width: 100vw;
+        height: 100vh;
+        margin: auto;
+        align-content: center;
+        display: flex;
+        justify-content: center;
+      }
     </style>
   </head>
-  <body>
-    <div id="message" class="message hidden">
-      <svg viewBox="0 0 950 220" style="width: 100%; height: 220px">
-        <defs>
-          <filter id="shadow">
-            <feDropShadow
-              dx="2"
-              dy="2"
-              stdDeviation="2"
-              flood-color="#000000"
-              flood-opacity="0.5"
-            />
-          </filter>
-        </defs>
-
-        <!-- Adjusted path: start and end y moved down to 180, control point at 50 -->
-        <path id="curve" fill="transparent" d="M50,180 Q400,50 950,180" />
-
-        <text
-          font-size="60"
-          fill="#d11a7b"
-          style="font-family: 'Rubik Wet Paint', cursive"
-          filter="url(#shadow)"
+  <body id="panda-background">
+    <div id="entry" onclick="playAudio()" style="cursor: pointer">
+      <button
+        onclick="playAudio()"
+        id="button"
+        style="
+          border: none;
+          height: 50px;
+          align-self: center;
+          background-color: transparent;
+          cursor: pointer;
+          z-index: 5;
+        "
+      >
+        <p
+          style="
+            font-family: 'Rubik Wet Paint', cursive;
+            font-size: 50px;
+            margin-top: 0px;
+            color: #d11a7b;
+          "
         >
-          <textPath href="#curve" startOffset="50%" text-anchor="middle">
-            HAPPY BIRTHDAY PUMPY!!!
-          </textPath>
-        </text>
-      </svg>
+          Let's Go...
+        </p>
+      </button>
+    </div>
+    <div id="main" style="display: none">
+      <div id="message" class="message hidden">
+        <svg viewBox="0 0 950 220" style="width: 100%; height: 220px">
+          <defs>
+            <filter id="shadow">
+              <feDropShadow
+                dx="2"
+                dy="2"
+                stdDeviation="2"
+                flood-color="#000000"
+                flood-opacity="0.5"
+              />
+            </filter>
+          </defs>
+
+          <!-- Adjusted path: start and end y moved down to 180, control point at 50 -->
+          <path id="curve" fill="transparent" d="M50,180 Q400,50 950,180" />
+
+          <text
+            font-size="60"
+            fill="#d11a7b"
+            style="font-family: 'Rubik Wet Paint', cursive"
+            filter="url(#shadow)"
+          >
+            <textPath href="#curve" startOffset="50%" text-anchor="middle">
+              HAPPY BIRTHDAY PUMPY!!!
+            </textPath>
+          </text>
+        </svg>
+      </div>
+
+      <div id="bouquet-container"></div>
+      <div
+        style="
+          font-family: 'Rubik Wet Paint', cursive;
+          font-size: 50px;
+          margin-top: 0px;
+          color: #d11a7b;
+          visibility: hidden;
+        "
+      >
+        <p>Aaj ki shaan bas tumhare naam</p>
+        <p></p>
+        <p>dajkfdkasf;kl</p>
+        <p>asd adkfja</p>
+        <p>;lfdka</p>
+      </div>
     </div>
 
-    <div id="bouquet-container"></div>
-    <div
-      style="
-        font-family: 'Rubik Wet Paint', cursive;
-        font-size: 50px;
-        margin-top: 0px;
-        color: #d11a7b;
-        visibility: hidden;
-      "
-    >
-      <p>Aaj ki shaan bas tumhare naam</p>
-      <p></p>
-      <p>dajkfdkasf;kl</p>
-      <p>asd adkfja</p>
-      <p>;lfdka</p>
-    </div>
-    <!-- Panda background container -->
-    <div id="panda-background"></div>
+    <audio id="birthday-audio" loop>
+      <source src="assets/audio/happy-birthday-314197.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
 
     <script>
+      function init() {
+        document.getElementById("button").click();
+      }
+      function playAudio() {
+        document.getElementById("entry").style.display = "none";
+        document.getElementById("main").style.display = "";
+        document.getElementById("main").style.position = "absolute";
+        start();
+        const audio = document.getElementById("birthday-audio");
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Autoplay failed - maybe show a button to start audio manually
+            console.log("Autoplay prevented, please click to play.");
+          });
+        }
+      }
       const pandaContainer = document.getElementById("panda-background");
 
       // Fill enough to cover the grid: use container size
@@ -319,106 +382,108 @@
         pandaContainer.appendChild(party);
       }
 
-      const flowerCount = 30;
-      const colors = [
-        "red",
-        "pink",
-        "hotpink",
-        "purple",
-        "violet",
-        "magenta",
-        "orchid",
-        "salmon",
-        "deeppink",
-      ];
+      function start() {
+        const flowerCount = 30;
+        const colors = [
+          "red",
+          "pink",
+          "hotpink",
+          "purple",
+          "violet",
+          "magenta",
+          "orchid",
+          "salmon",
+          "deeppink",
+        ];
 
-      const container = document.getElementById("bouquet-container");
+        const container = document.getElementById("bouquet-container");
 
-      function updateBouquetPoint() {
-        return {
-          x: container.clientWidth / 2.5,
-          y: container.clientHeight * 0.7,
-        };
-      }
-
-      let bouquetPoint = updateBouquetPoint();
-
-      window.addEventListener("resize", () => {
-        bouquetPoint = updateBouquetPoint();
-      });
-
-      for (let i = 0; i < flowerCount; i++) {
-        const flower = document.createElement("div");
-        const isRose = Math.random() > 0.5;
-        flower.className = `flower ${isRose ? "rose" : "orchid"}`;
-
-        // Random start anywhere in the container (full screen)
-        const startX =
-          Math.random() *
-          container.clientWidth *
-          1.5 *
-          (Math.random() > 0.5 ? 1 : Math.random() > 0.5 ? -1 : 0.3);
-        const startY =
-          Math.random() *
-          container.clientHeight *
-          1.5 *
-          (Math.random() > 0.5 ? 1 : Math.random() > 0.5 ? -1 : 0.3);
-
-        flower.style.left = `${startX}px`;
-        flower.style.top = `${startY}px`;
-
-        // Calculate vector to center point
-        const dx = bouquetPoint.x - startX;
-        const dy = bouquetPoint.y - startY;
-
-        // Calculate angle so flower points toward center
-        const rawAngle = (Math.atan2(dy, dx) * 45) / Math.PI;
-        const angle = rawAngle; // Adjust so flowers face upward
-
-        flower.style.setProperty("--angle", `${angle}deg`);
-        flower.style.setProperty("--tx", `${dx}px`);
-        flower.style.setProperty("--ty", `${dy}px`);
-
-        // Add petals
-        if (isRose) {
-          for (let j = 0; j < 5; j++) {
-            const petal = document.createElement("div");
-            petal.className = "petal";
-            petal.style.background =
-              colors[Math.floor(Math.random() * colors.length)];
-            flower.appendChild(petal);
-          }
-        } else {
-          for (let j = 1; j <= 5; j++) {
-            const petal = document.createElement("div");
-            petal.className = `petal petal${j}`;
-            petal.style.background =
-              colors[Math.floor(Math.random() * colors.length)];
-            flower.appendChild(petal);
-          }
+        function updateBouquetPoint() {
+          return {
+            x: container.clientWidth / 2.5,
+            y: container.clientHeight * 0.7,
+          };
         }
 
-        const center = document.createElement("div");
-        center.className = "center";
-        flower.appendChild(center);
+        let bouquetPoint = updateBouquetPoint();
 
-        const stem = document.createElement("div");
-        stem.className = "stem";
-        flower.appendChild(stem);
+        window.addEventListener("resize", () => {
+          bouquetPoint = updateBouquetPoint();
+        });
 
-        container.appendChild(flower);
+        for (let i = 0; i < flowerCount; i++) {
+          const flower = document.createElement("div");
+          const isRose = Math.random() > 0.5;
+          flower.className = `flower ${isRose ? "rose" : "orchid"}`;
 
+          // Random start anywhere in the container (full screen)
+          const startX =
+            Math.random() *
+            container.clientWidth *
+            1.5 *
+            (Math.random() > 0.5 ? 1 : Math.random() > 0.5 ? -1 : 0.3);
+          const startY =
+            Math.random() *
+            container.clientHeight *
+            1.5 *
+            (Math.random() > 0.5 ? 1 : Math.random() > 0.5 ? -1 : 0.3);
+
+          flower.style.left = `${startX}px`;
+          flower.style.top = `${startY}px`;
+
+          // Calculate vector to center point
+          const dx = bouquetPoint.x - startX;
+          const dy = bouquetPoint.y - startY;
+
+          // Calculate angle so flower points toward center
+          const rawAngle = (Math.atan2(dy, dx) * 45) / Math.PI;
+          const angle = rawAngle; // Adjust so flowers face upward
+
+          flower.style.setProperty("--angle", `${angle}deg`);
+          flower.style.setProperty("--tx", `${dx}px`);
+          flower.style.setProperty("--ty", `${dy}px`);
+
+          // Add petals
+          if (isRose) {
+            for (let j = 0; j < 5; j++) {
+              const petal = document.createElement("div");
+              petal.className = "petal";
+              petal.style.background =
+                colors[Math.floor(Math.random() * colors.length)];
+              flower.appendChild(petal);
+            }
+          } else {
+            for (let j = 1; j <= 5; j++) {
+              const petal = document.createElement("div");
+              petal.className = `petal petal${j}`;
+              petal.style.background =
+                colors[Math.floor(Math.random() * colors.length)];
+              flower.appendChild(petal);
+            }
+          }
+
+          const center = document.createElement("div");
+          center.className = "center";
+          flower.appendChild(center);
+
+          const stem = document.createElement("div");
+          stem.className = "stem";
+          flower.appendChild(stem);
+
+          container.appendChild(flower);
+
+          setTimeout(() => {
+            flower.classList.add("bouquet-converge");
+          }, 100);
+        }
+
+        // After 3.2 seconds (convergence duration + small buffer), show message
         setTimeout(() => {
-          flower.classList.add("bouquet-converge");
-        }, 100);
+          const message = document.getElementById("message");
+          message.classList.remove("hidden");
+          message.classList.add("fade-in");
+        }, 3000);
       }
-
-      // After 3.2 seconds (convergence duration + small buffer), show message
-      setTimeout(() => {
-        const message = document.getElementById("message");
-        message.classList.remove("hidden");
-        message.classList.add("fade-in");
-      }, 3000);
     </script>
   </body>
 </html>
